@@ -8,6 +8,10 @@ spec:
     matchLabels:
       app: kloud
   replicas: 2
+  template:
+    metadata:
+      labels:
+        app: kloud
   spec:
     container:
     - name: hr-web-app
