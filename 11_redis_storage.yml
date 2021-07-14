@@ -1,0 +1,17 @@
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: redis-storage-roy
+  namespace: finance-roy
+spec:
+  containers:
+  - name: redis-storage-roy
+    image: redis:alpine
+    volumeMounts:
+    - name: redis-storage-roy
+      mountPath: /data/redis
+  volumes:
+  - name: redis-storage-roy
+    emptyDir: {}
+    
