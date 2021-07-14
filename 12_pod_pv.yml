@@ -30,7 +30,7 @@ metadata:
 spec:
   volumes:
   - name: pv-1
-    persistantVolumeClaim:
+    persistentVolumeClaim:
       claimName: pv-1-claim
   containers:
   - name: use-pv
