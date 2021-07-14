@@ -1,19 +1,12 @@
 ---
-apiVersion: apps/v1
+apiVersion: v1
 kind: Pod
 metadata:
   name: static-busybox
   namespace: kube-system
 spec:
-  selector:
-    matchLabels:
-      app: kloud
-  replicas: 2
-  template:
-    metadata:
-      labels:
-        app: kloud
-    spec:
-      containers:
-      - name: hr-web-app
-        image: kodekloud/webapp-color
+  containers:
+  - name: static-busybox
+    image: busybox
+    command: ["sleep"]
+    args: ["1000"]
