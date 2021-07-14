@@ -16,13 +16,12 @@ kind: PersistentVolumeClaim
 metadata:
   name: pv-1-claim
 spec:
-  capacity:
-    storageClassName: manual
-    accessModes:
-      - ReadWriteMany
-    resources:
-      requests:
-        storage: 100Mi
+  storageClassName: manual
+  accessModes:
+    - ReadWriteMany
+  resources:
+    requests:
+      storage: 100Mi
 ---
 apiVersion: v1
 kind: Pod
