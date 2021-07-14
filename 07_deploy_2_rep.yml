@@ -13,7 +13,7 @@ spec:
       labels:
         app: kloud
     spec:
-      container:
+      containers:
       - name: hr-web-app
         image: kodekloud/webapp-color
         port:
