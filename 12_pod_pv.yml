@@ -24,7 +24,7 @@ spec:
     image: nginx
     resources: {}
     volumeMounts:
-    - name: use-pv
+    - name: pv-1
       mountPath: /data
   volumes:
   - name: pv-1
