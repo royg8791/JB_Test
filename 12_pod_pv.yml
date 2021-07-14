@@ -12,13 +12,27 @@ spec:
     path: /data
 ---
 apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: pv-1-claim
+spec:
+  capacity:
+    storageClassName: manual
+    accessModes:
+      - ReadWriteMany
+    resources:
+      requests:
+        storage: 100Mi
+---
+apiVersion: v1
 kind: Pod
 metadata:
-  creationTimestamp: null
-  labels:
-    run: use-pv
   name: use-pv-roy
 spec:
+  volumes:
+  - name: pv-1
+    persistantVolumeClaim:
+      claimName: pv-1-claim
   containers:
   - name: use-pv
     image: nginx
@@ -26,8 +40,6 @@ spec:
     volumeMounts:
     - name: pv-1
       mountPath: /data
-  volumes:
-  - name: pv-1
   dnsPolicy: ClusterFirst
   restartPolicy: Always
 status: {}
