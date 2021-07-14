@@ -1,0 +1,14 @@
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: finance-roy
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: temp-bus
+  namespace: finance-roy
+  containers:
+  - name: temp-bus
+    image: redis:alpine
