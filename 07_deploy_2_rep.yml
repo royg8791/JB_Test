@@ -1,0 +1,11 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: hr-web-app
+spec:
+  replicas: 2
+  spec:
+    container:
+    - name: hr-web-app
+      image: kodekloud/webapp-color

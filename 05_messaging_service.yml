@@ -6,11 +6,11 @@ metadata:
   labels:
     tier: msg
 spec:
-  type: ClusterIp
+  type: ClusterIP
   selector:
     tier: msg
   ports:
-    protocol: tcp
+  - protocol: TCP
     port: 6379
     targetPort: 6379
 
