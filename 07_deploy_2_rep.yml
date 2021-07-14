@@ -4,6 +4,9 @@ kind: Deployment
 metadata:
   name: hr-web-app
 spec:
+  selector:
+    matchLabels:
+      app: kloud
   replicas: 2
   spec:
     container:
