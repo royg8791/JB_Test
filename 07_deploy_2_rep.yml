@@ -12,9 +12,9 @@ spec:
     metadata:
       labels:
         app: kloud
-  spec:
-    container:
-    - name: hr-web-app
-      image: kodekloud/webapp-color
-      port:
-      - containerPort: 80
+    spec:
+      container:
+      - name: hr-web-app
+        image: kodekloud/webapp-color
+        port:
+        - containerPort: 80
