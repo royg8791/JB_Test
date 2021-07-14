@@ -14,7 +14,7 @@ spec:
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: pv-1-claim
+  name: pv-1
 spec:
   storageClassName: manual
   accessModes:
@@ -31,7 +31,7 @@ spec:
   volumes:
   - name: pv-1
     persistentVolumeClaim:
-      claimName: pv-1-claim
+      claimName: pv-1
   containers:
   - name: use-pv
     image: nginx
