@@ -16,5 +16,3 @@ spec:
       containers:
       - name: hr-web-app
         image: kodekloud/webapp-color
-        port:
-        - containerPort: 80
