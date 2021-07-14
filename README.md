@@ -23,7 +23,9 @@ kubectl apply -f 05_messaging_service.yml
 kubectl apply -f 07_deploy_rep.yml
 
 8) 
+
 9) 
+
 10) 
 11) 
 12) 
