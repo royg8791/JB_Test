@@ -24,10 +24,10 @@ spec:
     image: nginx
     resources: {}
     volumeMounts:
-    - name: redis-storage-roy
-      mountPath: /data/redis
+    - name: use-pv
+      mountPath: /data
   volumes:
-  - name: redis-storage-roy
+  - name: use-pv
     emptyDir: {}
   dnsPolicy: ClusterFirst
   restartPolicy: Always
