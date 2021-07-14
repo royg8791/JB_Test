@@ -27,8 +27,7 @@ spec:
     - name: use-pv
       mountPath: /data
   volumes:
-  - name: use-pv
-    emptyDir: {}
+  - name: pv-1
   dnsPolicy: ClusterFirst
   restartPolicy: Always
 status: {}
