@@ -9,6 +9,7 @@ kind: Pod
 metadata:
   name: temp-bus
   namespace: finance-roy
+spec:
   containers:
   - name: temp-bus
     image: redis:alpine
