@@ -1,0 +1,36 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: deploy-dev
+spec:
+  selector:
+    matchLabels:
+      env: dev
+  replicas: 3
+  template:
+    metadata:
+      labels:
+        env: dev
+    spec:
+      containers:
+      - name: hr-web-app
+        image: nginx
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: deploy-prod
+spec:
+  selector:
+    matchLabels:
+      env: prod
+  replicas: 2
+  template:
+    metadata:
+      labels:
+        env: prod
+    spec:
+      containers:
+      - name: deploy-prod
+        image: nginx
