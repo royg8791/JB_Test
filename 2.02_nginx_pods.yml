@@ -14,7 +14,7 @@ spec:
         env: dev
     spec:
       containers:
-      - name: hr-web-app
+      - name: deploy-dev
         image: nginx
 ---
 apiVersion: apps/v1
