@@ -49,9 +49,11 @@ Pod Design Questions
 1) Get pods with label info
 kubectl describe pods
 
-2) 
+2) create 5 nginx pods in witch two of them are labeled env=prod and three are labeled env=dev
+yaml file containing it 2.02_nginx_pods.yml
+or run this command: kubectl run {"pod name"} --image=nginx --labels env={"env(X2)/prod(X3)"}
 
-
+3) 
 
 
 
