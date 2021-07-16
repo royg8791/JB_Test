@@ -44,4 +44,14 @@ kubectl apply -f 12_pod_pv.yml
 
 16) 
 
+Pod Design Questions
+
+1) Get pods with label info
+kubectl describe pods
+
+2) 
+
+
+
+
 
