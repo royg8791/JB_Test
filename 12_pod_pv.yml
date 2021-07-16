@@ -16,7 +16,6 @@ kind: PersistentVolumeClaim
 metadata:
   name: pv-1
 spec:
-  storageClassName: manual
   accessModes:
     - ReadWriteMany
   resources:
@@ -26,6 +25,9 @@ spec:
 apiVersion: v1
 kind: Pod
 metadata:
+  creationTimestamp: null
+  labels:
+    run: use-pv-roy
   name: use-pv-roy
 spec:
   volumes:
@@ -33,7 +35,7 @@ spec:
     persistentVolumeClaim:
       claimName: pv-1
   containers:
-  - name: use-pv
+  - name: use-pv-roy
     image: nginx
     resources: {}
     volumeMounts:
