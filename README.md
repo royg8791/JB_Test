@@ -24,15 +24,24 @@ kubectl apply -f 07_deploy_rep.yml
 
 8) 
 
-9) 
+9) created pod with a namespace temp-bus based on redis:alpine image
+kubectl apply -f 09_pod_namespace.yml
 
-10) 
-11) 
-12) 
+10) created persistent volume named pv-analytics
+kubectl apply -f 10_persistant_volume.yml
+
+11) created pod with a volume of type emptyDir
+kubectl apply -f 11_redis_storage.yml
+
+12) created pod an dattached it on a persistant volume called pv-1
+kubectl apply -f 12_pod_pv.yml
+
 13) 
+
 14) 
+
 15) 
 
-
+16) 
 
 
