@@ -50,7 +50,7 @@ Pod Design Questions
 kubectl describe pods
 
 2) create 5 nginx pods in witch two of them are labeled env=prod and three are labeled env=dev
-yaml file containing it 2.02_nginx_pods.yml
+yaml file containing it 22_nginx_pods.yml
 or run this command: kubectl run {"pod name"} --image=nginx --labels env={"env(X2)/prod(X3)"}
 
 3) Verify all pods are created with correct labels
@@ -84,20 +84,29 @@ command: kubectl label --overwrite pods {"desired pod"} env=uat
 12) Remove the labels for the pods that we created now and verify all the labels are removed
 for single pod - command: kubectl label pods {"desired pod"} env-
 for multiple pods with label env - command: kubectl label pods -l env env-
-to check that the labels are removed - command: kubectl get pods -l env
+to check that the labels are removed - command: kubectl get pods --show-labels
 ***notice that the pods are running on yaml deployment with fixed labels, so changing the label will cause the deployment to restart the pods so the return to the desired state.
 
-13) Let’s add the label app=nginx for all the pods and verify (using kubectl)
+13) Let’s add the label app=nginx for all the pods and verify 
 command: kubectl label pods --all app=nginx
+to verify all pods have that label - command: kubectl get pods --show-labels
 
-14) Get all the nodes with labels (if using minikube you would get only master node)
+14) Get all the nodes with labels
+command: kubectl get nodes --show-labels
 
 15) Label the worker node nodeName=nginxnode
 
 16) Create a Pod that will be deployed on the worker node with the label nodeName=nginxnode
 
+17) Verify the pod that is scheduled with the node selector is on the right node
+
+18) Verify the pod nginx that we just created has this label
 
 
+
+Deployments
+
+1)
 
 
 
