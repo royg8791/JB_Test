@@ -130,16 +130,19 @@ file containing pods export > 304_pods_export.yml
 command: kubectl delete -f 301_deploy_5_rep.yml
 
 6) Create a deployment of webapp with image nginx:1.17.1 with container port 80 and verify the image version
-a) kubectl create deploy webapp --image=nginx:1.17.1 --dry-run -o yaml >
-webapp.yaml
-b) add the port section (80) and create the deployment
+command: kubectl apply -f 306_deploy_port_80.yml
+to verify the image - go to github and check if nginx:1.17.1 exists
 
 7) Update the deployment with the image version 1.17.4 and verify
+command: kubectl set image deployments {"deployment name"} nginx=nginx:1.17.4
+to verify - command: kubectl describe deployments {"deployment name"}            *** and verify image category
 
 8) Check the rollout history and make sure everything is ok after the update
+command: kubectl rollout history deployments {"deployment name"}
 
-9) Undo the deployment to the previous version 1.17.1 and verify Image has the
-previous version
+9) Undo the deployment to the previous version 1.17.1 and verify Image has the previous version
+command: kubectl rollout undo deployments {"deployment name"}
+to verify - command: kubectl describe deployments {"deployment name"}            *** and verify image category
 
 10) Update the deployment with the wrong image version 1.100 and verify something is
 wrong with the deployment
