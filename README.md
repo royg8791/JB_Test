@@ -113,22 +113,23 @@ command: kubectl get pods {"pod name"} --show-labels
 Deployments
 
 1) Create a deployment called webapp with image nginx with 5 replicas
-a) Use the below command to create a yaml file.
-i) kubectl create deploy webapp --image=nginx --dry-run -o yaml >
-webapp.yaml
-ii) Edit it and add 5 replica’s
+command: kubectl apply -f 301_deploy_5_rep.yml
 
 2) Get the deployment rollout status
+command: kubectl rollout status deployments {"deployment name"}
 
 3) Get the replicaset that created with this deployment
+command: kubectl get replicasets {"replicaset name"}
+*** you can get replicaset name from desired deployment by doing command: kubectl describe deployment {"deployment name"}          and looking under "NewReplicaSet" category
 
 4) EXPORT the yaml of the replicaset and pods of this deployment
+file containing replicaset export > 304_rs_export.yml
+file containing pods export > 304_pods_export.yml
 
-5) Delete the deployment you just created and watch all the pods are also being
-deleted
+5) Delete the deployment you just created and watch all the pods are also being deleted
+command: kubectl delete -f 301_deploy_5_rep.yml
 
-6) Create a deployment of webapp with image nginx:1.17.1 with container port 80 and
-verify the image version
+6) Create a deployment of webapp with image nginx:1.17.1 with container port 80 and verify the image version
 a) kubectl create deploy webapp --image=nginx:1.17.1 --dry-run -o yaml >
 webapp.yaml
 b) add the port section (80) and create the deployment
