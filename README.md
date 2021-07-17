@@ -36,15 +36,22 @@ command: \<kubectl apply -f 11_redis_storage.yml
 12) created pod an dattached it on a persistant volume called pv-1
 command: \<kubectl apply -f 12_pod_pv.yml
 
-13) 
+13) Create a new deployment called nginx-deploy, with image nginx:1.16 and 1 replica. Record the version. Next upgrade the deployment to version 1.17 using rolling update. Make sure that the version upgrade is recorded in the resource annotation.
+command: \<kubectl apply -f 13_nginx_deploy_record.yml
+for image change and recording - command: \<kubectl set image deployments {"deployment name"} nginx=nginx:1.17 --record
 
-14) 
+14) Create an nginx pod called nginx-resolver using image nginx, expose it internally with a service called nginx-resolver-service. Test that you are able to look up the 8363 service and pod names from within the cluster. Use the image: busybox:1.28 for dns lookup. Record results in /root/nginx-yourname.svc and /root/nginx-yourname.pod
+command: \<kubectl apply -f 14_deploy_and_service.yml
 
-15) 
 
-16) 
+15) Create a static pod on node01 called nginx-critical with image nginx. Create this pod
+on node01 and make sure that it is recreated/restarted automatically in case of a
+failure.
 
-Pod Design Questions
+16) Create a pod called multi-pod with two containers.
+Container 1, name: alpha, image: nginx
+Container 2: beta, image: busybox, command sleep 4800.
+command: \<kubectl apply -f 16_pod_2_containers.yml
 
 1) Get pods with label info
 command: \<kubectl get pods --show-labels
@@ -144,26 +151,27 @@ command: \<kubectl rollout history deployments {"deployment name"}
 command: \<kubectl rollout undo deployments {"deployment name"}
 to verify - command: \<kubectl describe deployments {"deployment name"}\> and verify image category
 
-10) Update the deployment with the wrong image version 1.100 and verify something is
-wrong with the deployment
-a) Expect: kubectl get pods (ImagePullErr)
-b) Undo the deployment with the previous version and verify everything is Ok
-c) kubectl rollout history deploy webapp --revision=7
-d) Check the history of the specific revision of that deployment
-e) update the deployment with the image version latest and check the history
-and verify nothing is going on
+10) Update the deployment with the wrong image version 1.100 and verify something is wrong with the deployment
+command: \<kubectl set image deployments {"deployment name"} nginx=nginx:1.100
+to verify - command: \<kubectl get pods\> you'll see under STATUS "ErrImagePull" and under READY 0/1
+command: \<kubectl rollout undo deployments {"deployment name"}
+to verify - command: \<kubectl get pods {"pods name"}\> you'll see under STATUS "Running" and under READY 1/1
+to check specific revision - command: \<kubectl rollout history deployments {"deployment name"} --revision={"revision number"}
+update image to latest - command: \<kubectl set image deployments {"deployment name"} nginx=nginx:latest
+history check - command: \<kubectl rollout history deployments {"deployment name"}\> you'll see a new revision
+to verify everything is running ok - command: \<kubectl get pods
 
-11) Apply the autoscaling to this deployment with minimum 10 and maximum 20 replicas
-and target CPU of 85% and verify hpa is created and replicas are increased to 10
-from 1
+11) Apply the autoscaling to this deployment with minimum 10 and maximum 20 replicas and target CPU of 85% and verify hpa is created and replicas are increased to 10 from 1
+command: \<kubectl autoscale deployments {"deployment name"} --max=20 --min=10 --cpu-percent=85
+to verify hpa is created - command: \<kubectl get horizontalpodautoscalers {"deployment name"}
+to verify replicas are increased - command: \<kubectl get deployments {"deployment name"}
 
 12.
 
 13) Clean the cluster by deleting deployment and hpa you just created
+deployment - command: \<kubectl delete deployments {"deployment name"}
+hpa - command: \<kubectl delete horizontalpodautoscalers {"deployment name"}
 
-14) Create a job and make it run 10 times one after one (run > exit > run >exit ..) using
-the following configuration:
-kubectl create job hello-job --image=busybox --dry-run -o yaml -- echo "Hello I am
-from job" > hello-job.yaml”
-a) Add to the above job completions: 10 inside the yaml
 
+14) Create a job and make it run 10 times one after one (run > exit > run >exit ..) using the following configuration:
+file - 314_hello_job.yml

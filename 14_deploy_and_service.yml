@@ -1,0 +1,43 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx-resolver
+spec:
+  selector:
+    matchLabels:
+      app: nginx
+  template:
+    metadata:
+      labels:
+        app: nginx
+    spec:
+      containers:
+      - name: nginx
+        image: nginx
+---
+apiVersion: v1
+kind: Service 
+metadata:
+  name: nginx-resolver-service
+spec:
+  ports:
+  - name: some
+    port: 1
+    targetPort: 1
+  selector:
+    app: nginx
+    name: busybox
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: busybox
+  labels:
+    name: busybox
+spec:
+  hostname: busybox
+  subdomain: nginx-resolver
+  containers:
+  - name: busybox
+    image: buysbox:1.28
