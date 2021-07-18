@@ -140,27 +140,78 @@ command: \<kubectl apply -f 14_deploy_and_service.yml\>
 on node01 and make sure that it is recreated/restarted automatically in case of a
 failure.
 
+
 16) Create a pod called multi-pod with two containers.
 Container 1, name: alpha, image: nginx
 Container 2: beta, image: busybox, command sleep 4800.
-command: \<kubectl apply -f 16_pod_2_containers.yml\>
+<!-- 
+ubuntu@ip-172-31-10-80:~/JB_Test$ kubectl apply -f 16_pod_2_containers.yml
+pod/multi-pod created
+ubuntu@ip-172-31-10-80:~/JB_Test$ kubectl get pods
+NAME                           READY   STATUS    RESTARTS   AGE
+multi-pod                      2/2     Running   0          46s
+ubuntu@ip-172-31-10-80:~/JB_Test$ kubectl describe pods multi-pod
+Name:         multi-pod
+...
+Containers:
+  alpha:
+...
+  beta:
+...
+    Command:
+      sleep
+    Args:
+      4800
+ -->
 
 
 Pod Design Questions
 
 1) Get pods with label info
-command: \<kubectl get pods --show-labels\>
+<!-- 
+ubuntu@ip-172-31-10-80:~/JB_Test$ kubectl get pods --show-labels
+NAME                           READY   STATUS    RESTARTS   AGE     LABELS
+messaging                      1/1     Running   0          45m     tier=msg
+multi-pod                      2/2     Running   0          3m43s   <none>
+use-pv-roy                     1/1     Running   0          15m     run=use-pv-roy
+ -->
 
 2) create 5 nginx pods in witch two of them are labeled env=prod and three are labeled env=dev
-command: \<kubectl apply -f 202_nginx_pods.yml\>
-or run this command: kubectl run {"pod name"} --image=nginx --labels env={"env(X2)/prod(X3)"}
+or run this command: kubectl run {"pod name"} --image=nginx --labels env={"dev(X2)/prod(X3)"}
+<!-- 
+ubuntu@ip-172-31-10-80:~/JB_Test$ kubectl apply -f 202_nginx_pods.yml
+deployment.apps/deploy-dev created
+deployment.apps/deploy-prod created
+ubuntu@ip-172-31-10-80:~/JB_Test$ kubectl get deployments.apps
+NAME           READY   UP-TO-DATE   AVAILABLE   AGE
+deploy-dev     3/3     3            3           2m49s
+deploy-prod    2/2     2            2           2m49s
+ -->
+or
+
+
+
+
+
+
+
+
+
 
 3) Verify all pods are created with correct labels
 command: \<kubectl describe pods {"pod name"}\>
 then you go and check that all the labels are correct in the Labels section
 
+
+
+
+
 4) Get the pods with label env=dev
 command: \<kubectl get pods -l env=dev\>
+
+
+
+
 
 5) Get the pods with label env=dev and also output the label
 command: \<kubectl get pods -l env=dev -L env\>
