@@ -1,9 +1,9 @@
-<head
+<head>
 # JB_Test
 the README file is built in a structure of:
 num) explanation
 \<execution code\>
-/head>
+</head>
 
 1) Deploy a pod based on nginx:alpine image
 command: \<kubectl apply -f 01_nginx_pod.yml\>
