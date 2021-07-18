@@ -16,8 +16,10 @@ command: \<kubectl apply -f 03_namespace.yml
 4) json file containing nodes configurations up to this step
 command: \<kubectl get nodes -o json > 04_tmp_nodes.json
 
-5) = 6) created messaging service that listens on port 6379
+5) created messaging service that listens on port 6379
 command: \<kubectl apply -f 05_messaging_service.yml
+
+6) = 5
 
 7) created a deployment with 2 replicas based on kodekloud/webapp-color image
 command: \<kubectl apply -f 07_deploy_rep.yml
