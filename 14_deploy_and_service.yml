@@ -19,9 +19,10 @@ metadata:
   name: busybox
   labels:
     name: busybox
+    app: nginx
 spec:
-  hostname: busybox
-  subdomain: nginx-resolver
   containers:
   - name: busybox
     image: nginx
+    ports:
+    - containerPort: 80
