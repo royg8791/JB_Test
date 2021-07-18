@@ -16,13 +16,13 @@ spec:
 apiVersion: v1
 kind: Pod
 metadata:
-  name: busybox
+  name: nginx-resolver
   labels:
     name: busybox
     app: nginx
 spec:
   containers:
-  - name: busybox
+  - name: nginx-resolver
     image: nginx
     ports:
     - containerPort: 80
