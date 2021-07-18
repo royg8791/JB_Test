@@ -94,11 +94,21 @@ redis-storage-roy             1/1     Running   0          23s
  -->
 
 12) created pod an dattached it on a persistant volume called pv-1
-command: \<kubectl apply -f 12_pod_pv.yml\>
-
-
-
-
+<!-- 
+ubuntu@ip-172-31-10-80:~/JB_Test$ kubectl apply -f 12_pod_pv.yml
+persistentvolume/pv-1 created
+persistentvolumeclaim/pv-1 created
+pod/use-pv-roy created
+ubuntu@ip-172-31-10-80:~/JB_Test$ kubectl get pv pv-1
+NAME   CAPACITY   ACCESS MODES   RECLAIM POLICY   STATUS      CLAIM   STORAGECLASS   REASON   AGE
+pv-1   100Mi      RWO            Retain           Available                                   13s
+ubuntu@ip-172-31-10-80:~/JB_Test$ kubectl get pvc pv-1
+NAME   STATUS   VOLUME                                     CAPACITY   ACCESS MODES   STORAGECLASS    AGE
+pv-1   Bound    pvc-f9245503-487e-4249-913b-52b4f2eac960   1Gi        RWO            kops-ssd-1-17   21s
+ubuntu@ip-172-31-10-80:~/JB_Test$ kubectl get pods use-pv-roy
+NAME         READY   STATUS    RESTARTS   AGE
+use-pv-roy   1/1     Running   0          43s
+ -->
 
 13) Create a new deployment called nginx-deploy, with image nginx:1.16 and 1 replica. Record the version. Next upgrade the deployment to version 1.17 using rolling update. Make sure that the version upgrade is recorded in the resource annotation.
 command: \<kubectl apply -f 13_nginx_deploy_record.yml\>
@@ -118,8 +128,12 @@ Annotations:            deployment.kubernetes.io/revision: 2
 ...                        
     Image:        nginx:1.17
  -->
+
 14) Create an nginx pod called nginx-resolver using image nginx, expose it internally with a service called nginx-resolver-service. Test that you are able to look up the 8363 service and pod names from within the cluster. Use the image: busybox:1.28 for dns lookup. Record results in /root/nginx-yourname.svc and /root/nginx-yourname.pod
 command: \<kubectl apply -f 14_deploy_and_service.yml\>
+
+
+
 
 
 15) Create a static pod on node01 called nginx-critical with image nginx. Create this pod
