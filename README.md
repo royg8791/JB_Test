@@ -5,45 +5,119 @@ num) explanation
 
 
 1) Deploy a pod based on nginx:alpine image
-command: \<kubectl apply -f 01_nginx_pod.yml\>
+<!-- 
+ubuntu@ip-172-31-10-80:~/JB_Test$ kubectl apply -f 01_nginx_pod.yml
+pod/nginx-pod-roy created
+ubuntu@ip-172-31-10-80:~/JB_Test$ kubectl get pods
+NAME            READY   STATUS    RESTARTS   AGE
+nginx-pod-roy   1/1     Running   0          11s 
+ -->
 
 2) Deploy a messaging pod based on redis:alpine image
-command: \<kubectl apply -f 02_messaging_pod.yml\>
+<!-- 
+ubuntu@ip-172-31-10-80:~/JB_Test$ kubectl apply -f 02_messaging_pod.yml
+pod/messaging created 
+ubuntu@ip-172-31-10-80:~/JB_Test$ kubectl get pods
+NAME            READY   STATUS    RESTARTS   AGE
+messaging       1/1     Running   0          7s    
+ -->
 
 3) Create namespace called apx-x998-roy
-command: \<kubectl apply -f 03_namespace.yml\>
+<!-- 
+ubuntu@ip-172-31-10-80:~/JB_Test$ kubectl apply -f 03_namespace.yml
+namespace/apx-x998-roy created
+ubuntu@ip-172-31-10-80:~/JB_Test$ kubectl get ns
+NAME              STATUS   AGE
+apx-x998-roy      Active   5s  
+ -->
 
 4) json file containing nodes configurations up to this step
-command: \<kubectl get nodes -o json > 04_tmp_nodes.json\>
+<!-- 
+ubuntu@ip-172-31-10-80:~/JB_Test$ kubectl get nodes -o json > 04_tmp_nodes.json
+ -->
 
 5) created messaging service that listens on port 6379
-command: \<kubectl apply -f 05_messaging_service.yml
-
+<!-- 
+ubuntu@ip-172-31-10-80:~/JB_Test$ kubectl apply -f 05_messaging_service.yml
+service/messaging-service created
+ubuntu@ip-172-31-10-80:~/JB_Test$ kubectl get svc
+NAME                TYPE        CLUSTER-IP      EXTERNAL-IP   PORT(S)    AGE
+messaging-service   ClusterIP   100.70.60.189   <none>        6379/TCP   5s    
+ -->
 6) = 5
 
 7) created a deployment with 2 replicas based on kodekloud/webapp-color image
-command: \<kubectl apply -f 07_deploy_rep.yml\>
+<!-- 
+ubuntu@ip-172-31-10-80:~/JB_Test$ kubectl apply -f 07_deploy_2_rep.yml
+deployment.apps/hr-web-app created
+ubuntu@ip-172-31-10-80:~/JB_Test$ kubectl get deployments.apps hr-web-app
+NAME         READY   UP-TO-DATE   AVAILABLE   AGE
+hr-web-app   2/2     2            2           16s 
+ -->
 
 8) Create a static pod named static-busybox on the master node that uses the busybox
 image and the command sleep 1000
 
 
+
+
+
 9) created pod with a namespace temp-bus based on redis:alpine image
-command: \<kubectl apply -f 09_pod_namespace.yml\>
+<!-- 
+ubuntu@ip-172-31-10-80:~/JB_Test$ kubectl apply -f 09_pod_namespace.yml
+namespace/finance-roy created
+pod/temp-bus created
+ubuntu@ip-172-31-10-80:~/JB_Test$ kubectl get ns
+NAME              STATUS   AGE
+finance-roy       Active   15s
+ubuntu@ip-172-31-10-80:~/JB_Test$ kubectl get pods --namespace=finance-roy
+NAME       READY   STATUS    RESTARTS   AGE
+temp-bus   1/1     Running   0          2m
+ -->
 
 10) created persistent volume named pv-analytics
-command: \<kubectl apply -f 10_persistant_volume.yml\>
+<!-- 
+ubuntu@ip-172-31-10-80:~/JB_Test$ kubectl apply -f 10_persistant_volume.yml
+persistentvolume/pv-analytics created
+ubuntu@ip-172-31-10-80:~/JB_Test$ kubectl get pv
+NAME           CAPACITY   ACCESS MODES   RECLAIM POLICY   STATUS      CLAIM   STORAGECLASS   REASON   AGE
+pv-analytics   100Mi      RWX            Retain           Available                                   72s
+ -->
 
 11) created pod with a volume of type emptyDir
-command: \<kubectl apply -f 11_redis_storage.yml\>
+<!-- 
+ubuntu@ip-172-31-10-80:~/JB_Test$ kubectl apply -f 11_redis_storage.yml
+pod/redis-storage-roy created
+ubuntu@ip-172-31-10-80:~/JB_Test$ kubectl get pods
+NAME                          READY   STATUS    RESTARTS   AGE
+redis-storage-roy             1/1     Running   0          23s
+ -->
 
 12) created pod an dattached it on a persistant volume called pv-1
 command: \<kubectl apply -f 12_pod_pv.yml\>
 
+
+
+
+
 13) Create a new deployment called nginx-deploy, with image nginx:1.16 and 1 replica. Record the version. Next upgrade the deployment to version 1.17 using rolling update. Make sure that the version upgrade is recorded in the resource annotation.
 command: \<kubectl apply -f 13_nginx_deploy_record.yml\>
-for image change and recording - command: \<kubectl set image deployments {"deployment name"} nginx=nginx:1.17 --record\>
-
+<!-- 
+ubuntu@ip-172-31-10-80:~/JB_Test$ kubectl apply -f 13_nginx_deploy_record.yml
+deployment.apps/nginx-deploy created
+ubuntu@ip-172-31-10-80:~/JB_Test$ kubectl get deployments nginx-deploy
+NAME           READY   UP-TO-DATE   AVAILABLE   AGE
+nginx-deploy   1/1     1            1           17s
+ubuntu@ip-172-31-10-80:~/JB_Test$ kubectl set image deployments nginx-deploy nginx=nginx:1.17 --record
+deployment.apps/nginx-deploy image updated
+ubuntu@ip-172-31-10-80:~/JB_Test$ kubectl describe deployments nginx-deploy
+Name:                   nginx-deploy
+...
+Annotations:            deployment.kubernetes.io/revision: 2
+                        kubernetes.io/change-cause: kubectl set image deployments nginx-deploy nginx=nginx:1.17 --record=true
+...                        
+    Image:        nginx:1.17
+ -->
 14) Create an nginx pod called nginx-resolver using image nginx, expose it internally with a service called nginx-resolver-service. Test that you are able to look up the 8363 service and pod names from within the cluster. Use the image: busybox:1.28 for dns lookup. Record results in /root/nginx-yourname.svc and /root/nginx-yourname.pod
 command: \<kubectl apply -f 14_deploy_and_service.yml\>
 
