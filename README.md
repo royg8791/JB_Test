@@ -16,13 +16,8 @@ command: \<kubectl apply -f 03_namespace.yml\>
 4) json file containing nodes configurations up to this step
 command: \<kubectl get nodes -o json > 04_tmp_nodes.json\>
 
-<<<<<<< HEAD
-5) = 6) created messaging service that listens on port 6379
-command: \<kubectl apply -f 05_messaging_service.yml\>
-=======
 5) created messaging service that listens on port 6379
 command: \<kubectl apply -f 05_messaging_service.yml
->>>>>>> 9cedf3f3dbd341e832ac980902efa5d7d7809f88
 
 6) = 5
 
