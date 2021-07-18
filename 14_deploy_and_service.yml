@@ -40,4 +40,4 @@ spec:
   subdomain: nginx-resolver
   containers:
   - name: busybox
-    image: buysbox:1.28
+    image: nginx
