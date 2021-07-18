@@ -23,6 +23,6 @@ metadata:
 spec:
   containers:
   - name: busybox
-    image: busybox:1.28
+    image: nginx
     ports:
     - containerPort: 80
