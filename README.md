@@ -130,10 +130,25 @@ Annotations:            deployment.kubernetes.io/revision: 2
  -->
 
 14) Create an nginx pod called nginx-resolver using image nginx, expose it internally with a service called nginx-resolver-service. Test that you are able to look up the 8363 service and pod names from within the cluster. Use the image: busybox:1.28 for dns lookup. Record results in /root/nginx-yourname.svc and /root/nginx-yourname.pod
-command: \<kubectl apply -f 14_deploy_and_service.yml\>
+<!-- 
+ubuntu@ip-172-31-15-28:~/JB_Test$ kubectl apply -f 14_deploy_and_service.yml
+service/nginx-resolver-service created
+pod/nginx-resolver created
+ubuntu@ip-172-31-15-28:~/JB_Test$ kubectl get svc nginx-resolver-service
+NAME                     TYPE        CLUSTER-IP     EXTERNAL-IP   PORT(S)   AGE
+nginx-resolver-service   ClusterIP   100.66.254.0   <none>        80/TCP    10s
+ubuntu@ip-172-31-15-28:~/JB_Test$ kubectl get pods nginx-resolver
+NAME             READY   STATUS    RESTARTS   AGE
+nginx-resolver   1/1     Running   0          20s
+ubuntu@ip-172-31-15-28:~/JB_Test$ kubectl run test-nslookup --image=busybox:1.28 -- nslookup nginx-resolver-service
+pod/test-nslookup created
+ubuntu@ip-172-31-15-28:~/JB_Test$ kubectl logs test-nslookup
+Server:    100.64.0.10
+Address 1: 100.64.0.10 kube-dns.kube-system.svc.cluster.local
 
-
-
+Name:      nginx-resolver-service
+Address 1: 100.66.254.0 nginx-resolver-service.default.svc.cluster.local
+ -->
 
 
 15) Create a static pod on node01 called nginx-critical with image nginx. Create this pod
