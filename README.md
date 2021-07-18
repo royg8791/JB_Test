@@ -24,7 +24,9 @@ command: \<kubectl apply -f 05_messaging_service.yml
 7) created a deployment with 2 replicas based on kodekloud/webapp-color image
 command: \<kubectl apply -f 07_deploy_rep.yml
 
-8) 
+8) Create a static pod named static-busybox on the master node that uses the busybox
+image and the command sleep 1000
+
 
 9) created pod with a namespace temp-bus based on redis:alpine image
 command: \<kubectl apply -f 09_pod_namespace.yml
@@ -54,6 +56,9 @@ failure.
 Container 1, name: alpha, image: nginx
 Container 2: beta, image: busybox, command sleep 4800.
 command: \<kubectl apply -f 16_pod_2_containers.yml
+
+
+Pod Design Questions
 
 1) Get pods with label info
 command: \<kubectl get pods --show-labels
@@ -168,7 +173,7 @@ command: \<kubectl autoscale deployments {"deployment name"} --max=20 --min=10 -
 to verify hpa is created - command: \<kubectl get horizontalpodautoscalers {"deployment name"}
 to verify replicas are increased - command: \<kubectl get deployments {"deployment name"}
 
-12.
+12)
 
 13) Clean the cluster by deleting deployment and hpa you just created
 deployment - command: \<kubectl delete deployments {"deployment name"}
