@@ -1,19 +1,18 @@
 # JB_Test
 the README file is built in a structure of:
-num) explanation
-
+## num) explanation
+```
 execution code and output
-
-
+```
 
 1) Deploy a pod based on nginx:alpine image
-<!-- 
+``` 
 ubuntu@ip-172-31-10-80:~/JB_Test$ kubectl apply -f 01_nginx_pod.yml
 pod/nginx-pod-roy created
 ubuntu@ip-172-31-10-80:~/JB_Test$ kubectl get pods
 NAME            READY   STATUS    RESTARTS   AGE
 nginx-pod-roy   1/1     Running   0          11s 
- -->
+```
 
 2) Deploy a messaging pod based on redis:alpine image
 <!-- 
