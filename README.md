@@ -111,7 +111,6 @@ use-pv-roy   1/1     Running   0          43s
  -->
 
 13) Create a new deployment called nginx-deploy, with image nginx:1.16 and 1 replica. Record the version. Next upgrade the deployment to version 1.17 using rolling update. Make sure that the version upgrade is recorded in the resource annotation.
-command: \<kubectl apply -f 13_nginx_deploy_record.yml\>
 <!-- 
 ubuntu@ip-172-31-10-80:~/JB_Test$ kubectl apply -f 13_nginx_deploy_record.yml
 deployment.apps/nginx-deploy created
@@ -373,75 +372,213 @@ Node:         node01/172.17.0.21
  -->
 
 17) Verify the pod that is scheduled with the node selector is on the right node
-command: \<kubectl describe pods {"pod name"}\>
-check if the pods is on the desired node
-or command: \<kubectl describe nodes {"nodename"}
-check if the node has the desired pod in it
-
-
-
+<!-- 
+ubuntu@ip-172-31-10-80:~/JB_Test$ kubectl describe pods pod-6
+Name:         pod-6
+...
+Node:         node01/172.17.0.21
+ubuntu@ip-172-31-10-80:~/JB_Test$ kubectl describe nodes node01 
+Name:               node01
+Roles:              <none>
+Labels:             ...
+                    nodeName=nginxnode
+...
+  InternalIP:  172.17.0.21
+  Hostname:    node01
+...
+  Namespace    Name    CPU Requests  CPU Limits  Memory Requests  Memory Limits  AGE
+  ...
+  default      pod-6   0 (0%)        0 (0%)      0 (0%)           0 (0%)         115s
+ -->
 
 18) Verify the pod nginx that we just created has this label
-command: \<kubectl get pods {"pod name"} --show-labels\>
-
-
+<!-- 
+ubuntu@ip-172-31-10-80:~/JB_Test$ kubectl get pods pod-6 --show-labels 
+NAME    READY   STATUS    RESTARTS   AGE     LABELS
+pod-6   1/1     Running   0          5m24s   nodeName=nginxnode
+ -->
 
 
 Deployments
 
 1) Create a deployment called webapp with image nginx with 5 replicas
-command: \<kubectl apply -f 301_deploy_5_rep.yml\>
+<!-- 
+ubuntu@ip-172-31-10-80:~/JB_Test$ kubectl apply -f 301_deploy_5_rep.yml 
+deployment.apps/webapp created
+ubuntu@ip-172-31-10-80:~/JB_Test$ kubectl get deployments webapp 
+NAME     READY   UP-TO-DATE   AVAILABLE   AGE
+webapp   5/5     5            5           18s
+ -->
 
 2) Get the deployment rollout status
-command: \<kubectl rollout status deployments {"deployment name"}\>
+<!-- 
+ubuntu@ip-172-31-10-80:~/JB_Test$ kubectl rollout status deployment webapp 
+deployment "webapp" successfully rolled out
+ -->
 
 3) Get the replicaset that created with this deployment
-command: \<kubectl get replicasets {"replicaset name"}\>
-*** you can get replicaset name from desired deployment by doing command: \<kubectl describe deployment {"deployment name"}\> and looking under "NewReplicaSet" category
+<!-- 
+ubuntu@ip-172-31-10-80:~/JB_Test$ kubectl get rs webapp-59d9889648
+NAME                DESIRED   CURRENT   READY   AGE
+webapp-59d9889648   5         5         5       115s
+ -->
 
 4) EXPORT the yaml of the replicaset and pods of this deployment
 file containing replicaset export > 304_rs_export.yml
 file containing pods export > 304_pods_export.yml
+<!-- 
+ubuntu@ip-172-31-10-80:~/JB_Test$ kubectl get rs webapp-59d9889648 -o yaml > 304_rs_export.yml 
+ubuntu@ip-172-31-10-80:~/JB_Test$ kubectl get pods -o yaml > 304_pods_export.yml 
+ -->
 
 5) Delete the deployment you just created and watch all the pods are also being deleted
-command: \<kubectl delete -f 301_deploy_5_rep.yml\>
+<!-- 
+ubuntu@ip-172-31-10-80:~/JB_Test$ kubectl delete -f 301_deploy_5_rep.yml 
+deployment.apps "webapp" deleted
+ubuntu@ip-172-31-10-80:~/JB_Test$ kubectl get pods 
+No resources found in default namespace.
+ -->
 
 6) Create a deployment of webapp with image nginx:1.17.1 with container port 80 and verify the image version
-command: \<kubectl apply -f 306_deploy_port_80.yml\>
+<!-- 
+ubuntu@ip-172-31-10-80:~/JB_Test$ kubectl apply -f 306_deploy_port_80.yml 
+deployment.apps/webapp created
+ubuntu@ip-172-31-10-80:~/JB_Test$ kubectl get deployments webapp 
+NAME     READY   UP-TO-DATE   AVAILABLE   AGE
+webapp   1/1     1            1           14s
+ -->
 to verify the image - go to github and check if nginx:1.17.1 exists
 
 7) Update the deployment with the image version 1.17.4 and verify
-command: \<kubectl set image deployments {"deployment name"} nginx=nginx:1.17.4\>
-to verify - command: \<kubectl describe deployments {"deployment name"}\> and verify image category
+<!-- 
+ubuntu@ip-172-31-10-80:~/JB_Test$ kubectl set image deployments webapp nginx=nginx:1.17.4
+deployment.apps/webapp image updated
+ubuntu@ip-172-31-10-80:~/JB_Test$ kubectl describe deployments webapp 
+Name:                   webapp
+...
+    Image:        nginx:1.17.4
+ -->
 
 8) Check the rollout history and make sure everything is ok after the update
-command: \<kubectl rollout history deployments {"deployment name"}\>
+<!-- 
+ubuntu@ip-172-31-10-80:~/JB_Test$ kubectl rollout history deployment webapp 
+deployment.apps/webapp 
+REVISION  CHANGE-CAUSE
+1         <none>
+2         <none>
+ubuntu@ip-172-31-10-80:~/JB_Test$ kubectl rollout status deployment webapp 
+deployment "webapp" successfully rolled out
+ -->
 
 9) Undo the deployment to the previous version 1.17.1 and verify Image has the previous version
-command: \<kubectl rollout undo deployments {"deployment name"}\>
-to verify - command: \<kubectl describe deployments {"deployment name"}\> and verify image category
+<!-- 
+ubuntu@ip-172-31-10-80:~/JB_Test$ kubectl rollout undo deployment webapp 
+deployment.apps/webapp rolled back
+ubuntu@ip-172-31-10-80:~/JB_Test$ kubectl describe deployments webapp 
+Name:                   webapp
+...
+    Image:        nginx:1.17.1
+ -->
 
 10) Update the deployment with the wrong image version 1.100 and verify something is wrong with the deployment
-command: \<kubectl set image deployments {"deployment name"} nginx=nginx:1.100\>
-to verify - command: \<kubectl get pods\> you'll see under STATUS "ErrImagePull" and under READY 0/1
-command: \<kubectl rollout undo deployments {"deployment name"}\>
-to verify - command: \<kubectl get pods {"pods name"}\> you'll see under STATUS "Running" and under READY 1/1
-to check specific revision - command: \<kubectl rollout history deployments {"deployment name"} --revision={"revision number"}\>
-update image to latest - command: \<kubectl set image deployments {"deployment name"} nginx=nginx:latest\>
-history check - command: \<kubectl rollout history deployments {"deployment name"}\> you'll see a new revision
-to verify everything is running ok - command: \<kubectl get pods\>
+<!-- 
+ubuntu@ip-172-31-10-80:~/JB_Test$ kubectl set image deployments webapp nginx=nginx:1.100
+deployment.apps/webapp image updated
+ubuntu@ip-172-31-10-80:~/JB_Test$ kubectl get pods
+NAME                      READY   STATUS         RESTARTS   AGE
+webapp-67f449866c-6m7dr   1/1     Running        0          9s
+webapp-6b684475c5-59p2w   0/1     ErrImagePull   0          3m29s
+ubuntu@ip-172-31-10-80:~/JB_Test$ kubectl rollout status deployment webapp 
+Waiting for deployment "webapp" rollout to finish: 1 old replicas are pending termination...
+ -->
+<!-- 
+ubuntu@ip-172-31-10-80:~/JB_Test$ kubectl rollout undo deployment webapp 
+deployment.apps/webapp rolled back
+ubuntu@ip-172-31-10-80:~/JB_Test$ kubectl get pods
+NAME                      READY   STATUS    RESTARTS   AGE
+webapp-67f449866c-6m7dr   1/1     Running   0          89s
+ubuntu@ip-172-31-10-80:~/JB_Test$ kubectl rollout status deployment webapp 
+deployment "webapp" successfully rolled out
+ -->
+<!-- 
+ubuntu@ip-172-31-10-80:~/JB_Test$ kubectl rollout history deployment webapp 
+deployment.apps/webapp 
+REVISION  CHANGE-CAUSE
+2         <none>
+4         <none>
+5         <none>
+ubuntu@ip-172-31-10-80:~/JB_Test$ kubectl rollout history deployment webapp --revision=5
+deployment.apps/webapp with revision #5
+Pod Template:
+  Labels:       app=webapp
+        pod-template-hash=67f449866c
+  Containers:
+   nginx:
+    Image:      nginx:1.17.1
+    Port:       80/TCP
+    Host Port:  0/TCP
+    Environment:        <none>
+    Mounts:     <none>
+  Volumes:      <none>
+ -->
+<!-- 
+ubuntu@ip-172-31-10-80:~/JB_Test$ kubectl set image deployments webapp nginx=nginx:latest
+deployment.apps/webapp image updated
+ubuntu@ip-172-31-10-80:~/JB_Test$ kubectl rollout history deployment webapp 
+deployment.apps/webapp 
+REVISION  CHANGE-CAUSE
+2         <none>
+4         <none>
+5         <none>
+6         <none>
+ubuntu@ip-172-31-10-80:~/JB_Test$ kubectl get pods
+NAME                      READY   STATUS    RESTARTS   AGE
+webapp-5f5bf685db-klw7q   1/1     Running   0          36s
+ubuntu@ip-172-31-10-80:~/JB_Test$ 
+ -->
 
 11) Apply the autoscaling to this deployment with minimum 10 and maximum 20 replicas and target CPU of 85% and verify hpa is created and replicas are increased to 10 from 1
-command: \<kubectl autoscale deployments {"deployment name"} --max=20 --min=10 --cpu-percent=85\>
-to verify hpa is created - command: \<kubectl get horizontalpodautoscalers {"deployment name"}\>
-to verify replicas are increased - command: \<kubectl get deployments {"deployment name"}\>
+<!-- 
+ubuntu@ip-172-31-10-80:~/JB_Test$ kubectl autoscale deployment webapp --max=20 --min=10 --cpu-percent=85
+horizontalpodautoscaler.autoscaling/webapp autoscaled
+ubuntu@ip-172-31-10-80:~/JB_Test$ kubectl get horizontalpodautoscalers webapp 
+NAME     REFERENCE           TARGETS         MINPODS   MAXPODS   REPLICAS   AGE
+webapp   Deployment/webapp   <unknown>/85%   10        20        10         28s
+ubuntu@ip-172-31-10-80:~/JB_Test$ kubectl get deployments webapp 
+NAME     READY   UP-TO-DATE   AVAILABLE   AGE
+webapp   10/10   10           10          17m
+ -->
 
 12)
 
 13) Clean the cluster by deleting deployment and hpa you just created
-deployment - command: \<kubectl delete deployments {"deployment name"}\>
-hpa - command: \<kubectl delete horizontalpodautoscalers {"deployment name"}\>
+<!-- 
+ubuntu@ip-172-31-10-80:~/JB_Test$ kubectl delete deployments webapp 
+deployment.apps "webapp" deleted
+ubuntu@ip-172-31-10-80:~/JB_Test$ kubectl delete horizontalpodautoscalers webapp 
+horizontalpodautoscaler.autoscaling "webapp" deleted
+ubuntu@ip-172-31-10-80:~/JB_Test$ kubectl get horizontalpodautoscalers 
+No resources found in default namespace.
+ubuntu@ip-172-31-10-80:~/JB_Test$ kubectl get deployments 
+No resources found in default namespace.
+ -->
 
 
 14) Create a job and make it run 10 times one after one (run > exit > run >exit ..) using the following configuration:
-file - 314_hello_job.yml
+<!-- 
+ubuntu@ip-172-31-10-80:~/JB_Test$ kubectl apply -f 314_hello_job.yml 
+job.batch/hello-job created
+ubuntu@ip-172-31-10-80:~/JB_Test$ kubectl get jobs.batch hello-job 
+NAME        COMPLETIONS   DURATION   AGE
+hello-job   4/10          9s         9s
+ubuntu@ip-172-31-10-80:~/JB_Test$ kubectl get jobs.batch hello-job 
+NAME        COMPLETIONS   DURATION   AGE
+hello-job   7/10          17s        17s
+ubuntu@ip-172-31-10-80:~/JB_Test$ kubectl get jobs.batch hello-job 
+NAME        COMPLETIONS   DURATION   AGE
+hello-job   9/10          22s        22s
+ubuntu@ip-172-31-10-80:~/JB_Test$ kubectl get jobs.batch hello-job 
+NAME        COMPLETIONS   DURATION   AGE
+hello-job   10/10         22s        30s
+ -->
+
