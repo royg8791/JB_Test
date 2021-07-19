@@ -439,39 +439,39 @@ node01         Ready    <none>   46m   v1.18.0   ...,nodeName=nginxnode
 
 16) Create a Pod that will be deployed on the worker node with the label nodeName=nginxnode
 <!-- 
-ubuntu@ip-172-31-10-80:~/JB_Test$ kubectl run pod-6 --image=nginx --labels nodeName=nginxnode
-pod/pod-6 created
-ubuntu@ip-172-31-10-80:~/JB_Test$ kubectl describe pods pod-6
-Name:         pod-6
-...
-Node:         node01/172.17.0.21
+controlplane $ kubectl apply -f 216_pod_on_worker_node.yml 
+pod/nginx created
+controlplane $ kubectl get pods
+NAME    READY   STATUS    RESTARTS   AGE
+nginx   0/1     Pending   0          9s
+controlplane $ kubectl label nodes node01 nodeName=nginxnode
+node/node01 labeled
+controlplane $ kubectl get pods
+NAME    READY   STATUS              RESTARTS   AGE
+nginx   0/1     ContainerCreating   0          68s
+controlplane $ kubectl get pods
+NAME    READY   STATUS    RESTARTS   AGE
+nginx   1/1     Running   0          74s
  -->
 
 17) Verify the pod that is scheduled with the node selector is on the right node
 <!-- 
-ubuntu@ip-172-31-10-80:~/JB_Test$ kubectl describe pods pod-6
-Name:         pod-6
+controlplane $ kubectl describe pods nginx 
+Name:         nginx
 ...
-Node:         node01/172.17.0.21
-ubuntu@ip-172-31-10-80:~/JB_Test$ kubectl describe nodes node01 
-Name:               node01
-Roles:              <none>
-Labels:             ...
-                    nodeName=nginxnode
+Node:         node01/172.17.0.23
 ...
-  InternalIP:  172.17.0.21
-  Hostname:    node01
+    State:          Running
 ...
-  Namespace    Name    CPU Requests  CPU Limits  Memory Requests  Memory Limits  AGE
-  ...
-  default      pod-6   0 (0%)        0 (0%)      0 (0%)           0 (0%)         115s
+Node-Selectors:  nodeName=nginxnode
+...
  -->
 
 18) Verify the pod nginx that we just created has this label
 <!-- 
-ubuntu@ip-172-31-10-80:~/JB_Test$ kubectl get pods pod-6 --show-labels 
+controlplane $ kubectl get pods --show-labels 
 NAME    READY   STATUS    RESTARTS   AGE     LABELS
-pod-6   1/1     Running   0          5m24s   nodeName=nginxnode
+nginx   1/1     Running   0          7m33s   nodeName=nginxnode
  -->
 
 
