@@ -177,7 +177,7 @@ Containers:
  -->
 
 
-Pod Design Questions
+# Pod Design Questions
 
 1) Get pods with label info
 <!-- 
@@ -397,7 +397,7 @@ pod-6   1/1     Running   0          5m24s   nodeName=nginxnode
  -->
 
 
-Deployments
+# Deployments
 
 1) Create a deployment called webapp with image nginx with 5 replicas
 <!-- 
