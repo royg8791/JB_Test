@@ -1,9 +1,8 @@
 # JB_Test
 the README file is built in a structure of:
 num) explanation
-<!-- 
+
 execution code and output
- -->
 
 
 
@@ -61,42 +60,41 @@ hr-web-app   2/2     2            2           16s
 8) Create a static pod named static-busybox on the master node that uses the busybox
 image and the command sleep 1000
 <!-- 
-MASTER $ ssh node01 
-node01 $ mkdir /etc/kubelet.d
-node01 $ cat <<EOF > /etc/kubelet.d/static.yml
-> apiVersion: v1
-> kind: Pod
-> metadata:
->   name: static-busybox
->   labels:
->     static: pod
-> spec:
->   containers:
->   - name: static-busybox
->     image: busybox
->     command: ["sleep"]
->     args: ["1000"]
->     ports:
->     - name: http
->       containerPort: 80
->       prtotocol: TCP
-> EOF
-node01 $ nano /etc/systemd/system/kubelet.service.d/10-kubeadm.conf
+controlplane $ ll /etc/kubernetes/manifests/
+total 24
+-rw------- 1 root root 1850 Jul 19 21:48 etcd.yaml
+-rw------- 1 root root 3219 Jul 19 21:48 kube-apiserver.yaml
+-rw------- 1 root root 3081 Jul 19 21:48 kube-controller-manager.yaml
+-rw------- 1 root root 1120 Jul 19 21:48 kube-scheduler.yaml
+controlplane $ cat > /etc/kubernetes/manifests/static-pod.yml
+apiVersion: v1
+kind: Pod
+metadata:
+  name: static-busybox
+spec:
+  containers:
+  - name: static-busybox
+    image: busybox
+    command: ["sleep"]
+    args: ["1000"]
+^C
+controlplane $ systemctl daemon-reload 
+controlplane $ systemctl restart kubelet.service 
+controlplane $ kubectl get pods
+NAME                          READY   STATUS    RESTARTS   AGE
+static-busybox-controlplane   1/1     Running   0          58s
+controlplane $ kubectl delete pods static-busybox-controlplane 
+pod "static-busybox-controlplane" deleted
+controlplane $ kubectl get pods
+NAME                          READY   STATUS    RESTARTS   AGE
+static-busybox-controlplane   0/1     Pending   0          2s
+controlplane $ kubectl get pods
+NAME                          READY   STATUS    RESTARTS   AGE
+static-busybox-controlplane   1/1     Running   0          8s
+controlplane $ kubectl describe pods static-busybox-controlplane 
+Name:         static-busybox-controlplane
 ...
-[Service]
-Environment=... --pod-manifest-path=/etc/kubelet.d/"
-node01 $ systemctl daemon-reload 
-node01 $ systemctl restart kubelet.service 
-node01 $ exit
-logout
-Connection to node01 closed.
-MASTER $ kubectl get pods
-NAME                    READY   STATUS    RESTARTS   AGE
-static-busybox-node01   1/1     Running   0          3s
-MASTER $ kubectl describe pods static-busybox-node01 
-Name:         static-busybox-node01
-...
-Node:         node01/172.17.0.37
+    Image:         busybox
 ...
     Command:
       sleep
