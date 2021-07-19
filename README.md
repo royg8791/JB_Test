@@ -1,7 +1,7 @@
 # JB_Test
 the README file is built in a structure of:
 num) explanation
-\<execution code\>
+execution code and output
 
 
 1) Deploy a pod based on nginx:alpine image
