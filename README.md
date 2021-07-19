@@ -60,8 +60,6 @@ image and the command sleep 1000
 
 
 
-
-
 9) created pod with a namespace temp-bus based on redis:alpine image
 <!-- 
 ubuntu@ip-172-31-10-80:~/JB_Test$ kubectl apply -f 09_pod_namespace.yml
