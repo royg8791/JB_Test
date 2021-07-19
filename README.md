@@ -192,81 +192,165 @@ use-pv-roy                     1/1     Running   0          15m     run=use-pv-r
  -->
 
 2) create 5 nginx pods in witch two of them are labeled env=prod and three are labeled env=dev
-or run this command: kubectl run {"pod name"} --image=nginx --labels env={"dev(X2)/prod(X3)"}
 <!-- 
-ubuntu@ip-172-31-10-80:~/JB_Test$ kubectl apply -f 202_nginx_pods.yml
-deployment.apps/deploy-dev created
-deployment.apps/deploy-prod created
-ubuntu@ip-172-31-10-80:~/JB_Test$ kubectl get deployments.apps
-NAME           READY   UP-TO-DATE   AVAILABLE   AGE
-deploy-dev     3/3     3            3           2m49s
-deploy-prod    2/2     2            2           2m49s
+ubuntu@ip-172-31-10-80:~/JB_Test$ kubectl run pod-1 --image=nginx --labels env=prod
+pod/pod-1 created
+ubuntu@ip-172-31-10-80:~/JB_Test$ kubectl run pod-2 --image=nginx --labels env=prod
+pod/pod-2 created
+ubuntu@ip-172-31-10-80:~/JB_Test$ kubectl run pod-3 --image=nginx --labels env=dev
+pod/pod-3 created
+ubuntu@ip-172-31-10-80:~/JB_Test$ kubectl run pod-4 --image=nginx --labels env=dev
+pod/pod-4 created
+ubuntu@ip-172-31-10-80:~/JB_Test$ kubectl run pod-5 --image=nginx --labels env=dev
+pod/pod-5 created
+ubuntu@ip-172-31-10-80:~/JB_Test$ kubectl get pods --show-labels 
+NAME    READY   STATUS    RESTARTS   AGE   LABELS
+pod-1   1/1     Running   0          45s   env=prod
+pod-2   1/1     Running   0          40s   env=prod
+pod-3   1/1     Running   0          31s   env=dev
+pod-4   1/1     Running   0          27s   env=dev
+pod-5   1/1     Running   0          21s   env=dev
  -->
-or
-
-
-
-
-
-
-
-
-
 
 3) Verify all pods are created with correct labels
-command: \<kubectl describe pods {"pod name"}\>
-then you go and check that all the labels are correct in the Labels section
-
-
-
-
+<!-- 
+ubuntu@ip-172-31-10-80:~/JB_Test$ kubectl get pods --show-labels 
+NAME    READY   STATUS    RESTARTS   AGE   LABELS
+pod-1   1/1     Running   0          45s   env=prod
+pod-2   1/1     Running   0          40s   env=prod
+pod-3   1/1     Running   0          31s   env=dev
+pod-4   1/1     Running   0          27s   env=dev
+pod-5   1/1     Running   0          21s   env=dev
+ -->
 
 4) Get the pods with label env=dev
-command: \<kubectl get pods -l env=dev\>
-
-
-
-
+<!-- 
+ubuntu@ip-172-31-10-80:~/JB_Test$ kubectl get pods -l env=dev
+NAME    READY   STATUS    RESTARTS   AGE
+pod-3   1/1     Running   0          2m23s
+pod-4   1/1     Running   0          2m19s
+pod-5   1/1     Running   0          2m13s
+ -->
 
 5) Get the pods with label env=dev and also output the label
-command: \<kubectl get pods -l env=dev -L env\>
+<!-- 
+ubuntu@ip-172-31-10-80:~/JB_Test$ kubectl get pods -l env=dev --show-labels 
+NAME    READY   STATUS    RESTARTS   AGE     LABELS
+pod-3   1/1     Running   0          3m14s   env=dev
+pod-4   1/1     Running   0          3m10s   env=dev
+pod-5   1/1     Running   0          3m4s    env=dev
+ -->
 
 6) Get the pods with label env=prod
-command: \<kubectl get pods -l env=prod\>
+<!-- 
+ubuntu@ip-172-31-10-80:~/JB_Test$ kubectl get pods -l env=prod
+NAME    READY   STATUS    RESTARTS   AGE
+pod-1   1/1     Running   0          3m54s
+pod-2   1/1     Running   0          3m49s
+ -->
 
 7) Get the pods with label env=prod and also output the labels
-command: \<kubectl get pods -l env=prod -L env\>
+<!-- 
+ubuntu@ip-172-31-10-80:~/JB_Test$ kubectl get pods -l env=prod --show-labels 
+NAME    READY   STATUS    RESTARTS   AGE     LABELS
+pod-1   1/1     Running   0          4m20s   env=prod
+pod-2   1/1     Running   0          4m15s   env=prod
+ -->
 
 8) Get the pods with label env
-command: \<kubectl get pods -l env\>
+<!-- 
+ubuntu@ip-172-31-10-80:~/JB_Test$ kubectl get pods -l env
+NAME    READY   STATUS    RESTARTS   AGE
+pod-1   1/1     Running   0          5m21s
+pod-2   1/1     Running   0          5m16s
+pod-3   1/1     Running   0          5m7s
+pod-4   1/1     Running   0          5m3s
+pod-5   1/1     Running   0          4m57s
+ -->
 
 9) Get the pods with labels env=dev and env=prod
-command: \<kubectl get pods -L env | egrep 'prod|dev'\>
+<!-- 
+ubuntu@ip-172-31-10-80:~/JB_Test$ kubectl get pods -l env --show-labels | egrep 'dev|prod'
+pod-1   1/1     Running   0          5m51s   env=prod
+pod-2   1/1     Running   0          5m46s   env=prod
+pod-3   1/1     Running   0          5m37s   env=dev
+pod-4   1/1     Running   0          5m33s   env=dev
+pod-5   1/1     Running   0          5m27s   env=dev
+ -->
+or
+<!-- 
+ubuntu@ip-172-31-10-80:~/JB_Test$ kubectl get pods -L env | egrep 'prod|dev'
+pod-1   1/1     Running   0          6m14s   prod
+pod-2   1/1     Running   0          6m9s    prod
+pod-3   1/1     Running   0          6m      dev
+pod-4   1/1     Running   0          5m56s   dev
+pod-5   1/1     Running   0          5m50s   dev
+ -->
 
 10) Get the pods with labels env=dev and env=prod and output the labels as well
-command: \<kubectl get pods -L env | egrep 'prod|dev'\>
+<!-- 
+ubuntu@ip-172-31-10-80:~/JB_Test$ kubectl get pods -l env --show-labels | egrep 'dev|prod'
+pod-1   1/1     Running   0          7m18s   env=prod
+pod-2   1/1     Running   0          7m13s   env=prod
+pod-3   1/1     Running   0          7m4s    env=dev
+pod-4   1/1     Running   0          7m      env=dev
+pod-5   1/1     Running   0          6m54s   env=dev
+ -->
 
 11) Change the label for one of the pod to env=uat and list all the pods to verify
-command: \<kubectl label --overwrite pods {"desired pod"} env=uat\>
+<!-- 
+ubuntu@ip-172-31-10-80:~/JB_Test$ kubectl label pods pod-5 env=uat --overwrite 
+pod/pod-5 labeled
+ubuntu@ip-172-31-10-80:~/JB_Test$ kubectl get pods -l env --show-labels 
+NAME    READY   STATUS    RESTARTS   AGE     LABELS
+pod-1   1/1     Running   0          8m25s   env=prod
+pod-2   1/1     Running   0          8m20s   env=prod
+pod-3   1/1     Running   0          8m11s   env=dev
+pod-4   1/1     Running   0          8m7s    env=dev
+pod-5   1/1     Running   0          8m1s    env=uat
+ -->
 
 12) Remove the labels for the pods that we created now and verify all the labels are removed
-for single pod - command: \<kubectl label pods {"desired pod"} env-\>
-for multiple pods with label env - command: \<kubectl label pods -l env env-\>
-to check that the labels are removed - command: \<kubectl get pods --show-labels\>
-***notice that the pods are running on yaml deployment with fixed labels, so changing the label will cause the deployment to restart the pods so the return to the desired state.
+<!-- 
+controlplane $ kubectl label pods -l env env-
+pod/pod-1 labeled
+pod/pod-2 labeled
+pod/pod-3 labeled
+pod/pod-4 labeled
+pod/pod-5 labeled
+controlplane $ kubectl get pods --show-labels 
+NAME    READY   STATUS    RESTARTS   AGE     LABELS
+pod-1   1/1     Running   0          10m     <none>
+pod-2   1/1     Running   0          10m     <none>
+pod-3   1/1     Running   0          9m51s   <none>
+pod-4   1/1     Running   0          9m47s   <none>
+pod-5   1/1     Running   0          9m41s   <none>
+ -->
 
 13) Let’s add the label app=nginx for all the pods and verify 
 command: \<kubectl label pods --all app=nginx\>
 to verify all pods have that label - command: \<kubectl get pods --show-labels\>
 
+
+
+
 14) Get all the nodes with labels
 command: \<kubectl get nodes --show-labels\>
+
+
+
 
 15) Label the worker node nodeName=nginxnode
 command: \<kubectl label nodes {"worker node name"} nodeName=nginxnode\>     
 
+
+
+
 16) Create a Pod that will be deployed on the worker node with the label nodeName=nginxnode
 command: \<kubectl run {"pod name"} --image=nginx --labels nodeName=nginxnode\>
+
+
+
 
 17) Verify the pod that is scheduled with the node selector is on the right node
 command: \<kubectl describe pods {"pod name"}\>
@@ -274,8 +358,13 @@ check if the pods is on the desired node
 or command: \<kubectl describe nodes {"nodename"}
 check if the node has the desired pod in it
 
+
+
+
 18) Verify the pod nginx that we just created has this label
 command: \<kubectl get pods {"pod name"} --show-labels\>
+
+
 
 
 Deployments
