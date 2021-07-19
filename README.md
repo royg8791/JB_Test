@@ -312,13 +312,13 @@ pod-5   1/1     Running   0          8m1s    env=uat
 
 12) Remove the labels for the pods that we created now and verify all the labels are removed
 <!-- 
-controlplane $ kubectl label pods -l env env-
+ubuntu@ip-172-31-10-80:~/JB_Test$ kubectl label pods -l env env-
 pod/pod-1 labeled
 pod/pod-2 labeled
 pod/pod-3 labeled
 pod/pod-4 labeled
 pod/pod-5 labeled
-controlplane $ kubectl get pods --show-labels 
+ubuntu@ip-172-31-10-80:~/JB_Test$ kubectl get pods --show-labels 
 NAME    READY   STATUS    RESTARTS   AGE     LABELS
 pod-1   1/1     Running   0          10m     <none>
 pod-2   1/1     Running   0          10m     <none>
@@ -328,29 +328,49 @@ pod-5   1/1     Running   0          9m41s   <none>
  -->
 
 13) Let’s add the label app=nginx for all the pods and verify 
-command: \<kubectl label pods --all app=nginx\>
-to verify all pods have that label - command: \<kubectl get pods --show-labels\>
-
-
-
+<!-- 
+ubuntu@ip-172-31-10-80:~/JB_Test$ kubectl label pods --all app=nginx
+pod/pod-1 labeled
+pod/pod-2 labeled
+pod/pod-3 labeled
+pod/pod-4 labeled
+pod/pod-5 labeled
+ubuntu@ip-172-31-10-80:~/JB_Test$ kubectl get pods --show-labels 
+NAME    READY   STATUS    RESTARTS   AGE   LABELS
+pod-1   1/1     Running   0          11m   app=nginx
+pod-2   1/1     Running   0          11m   app=nginx
+pod-3   1/1     Running   0          11m   app=nginx
+pod-4   1/1     Running   0          11m   app=nginx
+pod-5   1/1     Running   0          11m   app=nginx
+ -->
 
 14) Get all the nodes with labels
-command: \<kubectl get nodes --show-labels\>
-
-
-
+<!-- 
+ubuntu@ip-172-31-10-80:~/JB_Test$ kubectl get nodes --show-labels 
+NAME           STATUS   ROLES    AGE   VERSION   LABELS
+controlplane   Ready    master   45m   v1.18.0   ...
+node01         Ready    <none>   44m   v1.18.0   ...
+ -->
 
 15) Label the worker node nodeName=nginxnode
-command: \<kubectl label nodes {"worker node name"} nodeName=nginxnode\>     
-
-
-
+<!-- 
+ubuntu@ip-172-31-10-80:~/JB_Test$ kubectl label nodes node01 nodeName=nginxnode
+node/node01 labeled
+ubuntu@ip-172-31-10-80:~/JB_Test$ kubectl get nodes --show-labels 
+NAME           STATUS   ROLES    AGE   VERSION   LABELS
+controlplane   Ready    master   46m   v1.18.0   ...
+node01         Ready    <none>   46m   v1.18.0   ...,nodeName=nginxnode
+ -->
 
 16) Create a Pod that will be deployed on the worker node with the label nodeName=nginxnode
-command: \<kubectl run {"pod name"} --image=nginx --labels nodeName=nginxnode\>
-
-
-
+<!-- 
+ubuntu@ip-172-31-10-80:~/JB_Test$ kubectl run pod-6 --image=nginx --labels nodeName=nginxnode
+pod/pod-6 created
+ubuntu@ip-172-31-10-80:~/JB_Test$ kubectl describe pods pod-6
+Name:         pod-6
+...
+Node:         node01/172.17.0.21
+ -->
 
 17) Verify the pod that is scheduled with the node selector is on the right node
 command: \<kubectl describe pods {"pod name"}\>
