@@ -1,7 +1,10 @@
 # JB_Test
 the README file is built in a structure of:
 num) explanation
+<!-- 
 execution code and output
+ -->
+
 
 
 1) Deploy a pod based on nginx:alpine image
@@ -57,7 +60,49 @@ hr-web-app   2/2     2            2           16s
 
 8) Create a static pod named static-busybox on the master node that uses the busybox
 image and the command sleep 1000
-
+<!-- 
+MASTER $ ssh node01 
+node01 $ mkdir /etc/kubelet.d
+node01 $ cat <<EOF > /etc/kubelet.d/static.yml
+> apiVersion: v1
+> kind: Pod
+> metadata:
+>   name: static-busybox
+>   labels:
+>     static: pod
+> spec:
+>   containers:
+>   - name: static-busybox
+>     image: busybox
+>     command: ["sleep"]
+>     args: ["1000"]
+>     ports:
+>     - name: http
+>       containerPort: 80
+>       prtotocol: TCP
+> EOF
+node01 $ nano /etc/systemd/system/kubelet.service.d/10-kubeadm.conf
+...
+[Service]
+Environment=... --pod-manifest-path=/etc/kubelet.d/"
+node01 $ systemctl daemon-reload 
+node01 $ systemctl restart kubelet.service 
+node01 $ exit
+logout
+Connection to node01 closed.
+MASTER $ kubectl get pods
+NAME                    READY   STATUS    RESTARTS   AGE
+static-busybox-node01   1/1     Running   0          3s
+MASTER $ kubectl describe pods static-busybox-node01 
+Name:         static-busybox-node01
+...
+Node:         node01/172.17.0.37
+...
+    Command:
+      sleep
+    Args:
+      1000
+ -->
 
 
 9) created pod with a namespace temp-bus based on redis:alpine image
@@ -148,14 +193,49 @@ Address 1: 100.66.254.0 nginx-resolver-service.default.svc.cluster.local
  -->
 
 
-15) Create a static pod on node01 called nginx-critical with image nginx. Create this pod
-on node01 and make sure that it is recreated/restarted automatically in case of a
-failure.
-
+15) Create a static pod on node01 called nginx-critical with image nginx. Create this pod on node01 and make sure that it is recreated/restarted automatically in case of a failure.
+<!-- 
+MASTER $ ssh node01 
+node01 $ mkdir /etc/kubelet.d
+node01 $ cat <<EOF > /etc/kubelet.d/static.yml
+> apiVersion: v1
+> kind: Pod
+> metadata:
+>   name: static-critical
+>   labels:
+>     static: pod
+> spec:
+>   containers:
+>   - name: static-critical
+>     image: nginx
+>     ports:
+>     - name: http
+>       containerPort: 80
+>       protocol: TCP
+> EOF
+node01 $ nano /etc/systemd/system/kubelet.service.d/10-kubeadm.conf
+...
+[Service]
+Environment=... --pod-manifest-path=/etc/kubelet.d/"
+node01 $ systemctl daemon-reload 
+node01 $ systemctl restart kubelet.service 
+node01 $ exit
+logout
+Connection to node01 closed.
+MASTER $ kubectl get pods
+NAME                     READY   STATUS    RESTARTS   AGE
+static-critical-node01   1/1     Running   0          22s
+MASTER $ kubectl delete pods static-critical-node01 
+pod "static-critical-node01" deleted
+MASTER $ kubectl get pods
+NAME                     READY   STATUS    RESTARTS   AGE
+static-critical-node01   0/1     Pending   0          2s
+MASTER $ kubectl get pods
+NAME                     READY   STATUS    RESTARTS   AGE
+static-critical-node01   1/1     Running   0          11s
+ -->
 
 16) Create a pod called multi-pod with two containers.
-Container 1, name: alpha, image: nginx
-Container 2: beta, image: busybox, command sleep 4800.
 <!-- 
 ubuntu@ip-172-31-10-80:~/JB_Test$ kubectl apply -f 16_pod_2_containers.yml
 pod/multi-pod created
@@ -422,8 +502,6 @@ webapp-59d9889648   5         5         5       115s
  -->
 
 4) EXPORT the yaml of the replicaset and pods of this deployment
-file containing replicaset export > 304_rs_export.yml
-file containing pods export > 304_pods_export.yml
 <!-- 
 ubuntu@ip-172-31-10-80:~/JB_Test$ kubectl get rs webapp-59d9889648 -o yaml > 304_rs_export.yml 
 ubuntu@ip-172-31-10-80:~/JB_Test$ kubectl get pods -o yaml > 304_pods_export.yml 
