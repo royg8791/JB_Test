@@ -697,8 +697,32 @@ Events:  <none>
 3) Create an nginx pod and load environment values from the above configmap
 keyvalcfgmap and exec into the pod and verify the environment variables and delete
 the pod
-// first run this command to save the pod yml
-kubectl run nginx --image=nginx --restart=Never --dry-run -o yaml > nginx-pod.yml
 ```
-
+controlplane $ cat nginx-pod.yml 
+apiVersion: v1
+kind: Pod
+metadata:
+  creationTimestamp: null
+  labels:
+    run: nginx
+  name: nginx
+spec:
+  containers:
+  - image: nginx
+    name: nginx
+    command: [ "/bin/sh", "-c", "env" ]
+    envFrom: 
+    - configMapRef:
+        name: keyvalcfgmap
+    resources: {}
+  dnsPolicy: ClusterFirst
+  restartPolicy: Never
+status: {}
+controlplane $ kubectl apply -f nginx-pod.yml 
+pod/nginx created
+controlplane $ kubectl describe pods nginx 
+Name:         nginx
+...
+    Environment Variables from:
+      keyvalcfgmap  ConfigMap  Optional: false
 ```
